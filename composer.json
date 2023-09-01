@@ -1,0 +1,21 @@
+{
+  "name": "secureaks/basemvc",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Romain Garcia",
+      "email": "garciar@secureaks.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "require": {
+    "symfony/http-foundation": "^6.3",
+    "phroute/phroute": "^2.2",
+    "ext-pdo": "*",
+    "symfony/mime": "7.0.x-dev"
+  }
+}
