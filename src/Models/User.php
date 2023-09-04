@@ -29,7 +29,7 @@ class User extends AbstractModel
         $query->bindParam(':email', $email);
         $query->execute();
 
-        return $query->fetch() > 0;
+        return $query->fetch()[0] > 0;
     }
 
     public function getAll(): array|bool
