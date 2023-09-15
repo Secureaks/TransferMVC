@@ -24,6 +24,20 @@ class FileController extends AbstractController
             $this->logger->log("Unable to upload file : No file");
             return $this->error('No file uploaded', 400);
         }
+        // Get the file's extension
+        $fileExtension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+
+        // Check for PHP file
+        if ($fileExtension === 'php') {
+            $this->logger->log("Unable to upload file : PHP files are not allowed");
+            return $this->error('PHP files are not allowed', 400);
+        }
+
+        // Check for file size (10 MB = 10 * 1024 * 1024 bytes)
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            $this->logger->log("Unable to upload file : File exceeds 10MB");
+            return $this->error('File size should not exceed 10MB', 400);
+        }
 
         $filename = $file->getClientOriginalName();
         $fileSize = $file->getSize();
