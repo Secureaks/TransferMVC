@@ -68,4 +68,3 @@ CREATE TABLE `user` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-09-01 15:23:06
-Projet2Projet2Projet2user
