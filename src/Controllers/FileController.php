@@ -14,29 +14,40 @@ class FileController extends AbstractController
 
     public function upload(): Response
     {
+        $messageService = new Message();
+
         if (!(new Csrf())->check($this->request->get('csrf'))) {
-            return $this->error('Invalid CSRF token', 400);
+            $messageService->addMessage('Invalid CSRF token');
+            $response = new RedirectResponse('/dashboard');
+            return $response->send();
         }
 
         $file = $this->request->files->get('file');
 
         if (!$file) {
             $this->logger->log("Unable to upload file : No file");
-            return $this->error('No file uploaded', 400);
+            $messageService->addMessage('No file uploaded');
+            $response = new RedirectResponse('/dashboard');
+            return $response->send();
         }
+
         // Get the file's extension
         $fileExtension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
         // Check for PHP file
         if ($fileExtension === 'php') {
             $this->logger->log("Unable to upload file : PHP files are not allowed");
-            return $this->error('PHP files are not allowed', 400);
+            $messageService->addMessage('PHP files are not allowed');
+            $response = new RedirectResponse('/dashboard');
+            return $response->send();
         }
 
         // Check for file size (10 MB = 10 * 1024 * 1024 bytes)
         if ($file->getSize() > 10 * 1024 * 1024) {
             $this->logger->log("Unable to upload file : File exceeds 10MB");
-            return $this->error('File size should not exceed 10MB', 400);
+            $messageService->addMessage('File size should not exceed 10MB');
+            $response = new RedirectResponse('/dashboard');
+            return $response->send();
         }
 
         $filename = $file->getClientOriginalName();
@@ -44,10 +55,14 @@ class FileController extends AbstractController
 
         $upload = new Upload();
         $path = $upload->upload($file);
+
         if (!$path) {
             $this->logger->log("Unable to upload file : File error");
-            return $this->error('An error occurred', 500);
+            $messageService->addMessage('An error occurred during the upload.');
+            $response = new RedirectResponse('/dashboard');
+            return $response->send();
         }
+
 
         $fileModel = new File();
         $result = $fileModel->create(
