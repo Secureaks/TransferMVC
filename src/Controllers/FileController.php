@@ -36,8 +36,8 @@ class FileController extends AbstractController
 
         // Convert the extension to lowercase and check if it contains "php"
         if (str_contains(strtolower($fileExtension), 'php')) {
-            $this->logger->log("Unable to upload file : Files with .{$fileExtension} extension are not allowed");
-            $messageService->addMessage("Files with .{$fileExtension} extension are not allowed");
+            $this->logger->log("Unable to upload file : Files with $fileExtension extension are not allowed");
+            $messageService->addMessage("Files with $fileExtension extension are not allowed");
             $response = new RedirectResponse('/dashboard');
             return $response->send();
         }
